@@ -13,7 +13,7 @@ class Config(object):
     FORCE_SUB) else None
    
     # database config
-    DB_URI = os.environ.get("DB_URL", "mongodb+srv://koyeb77user:rohit870@cluster0.wgdkp.mongodb.net/?retryWrites=true&w=majority")
+    DB_URL = os.environ.get("DB_URL", "mongodb+srv://koyeb77user:rohit870@cluster0.wgdkp.mongodb.net/?retryWrites=true&w=majority")
     DB_NAME = os.environ.get("DATABASE_NAME", "cphdlust1234")
 
     # Other Configs 
