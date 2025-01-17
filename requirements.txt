@@ -2,6 +2,7 @@ pyrogram
 TgCrypto
 python-dotenv
 hachoir
+ffmpeg
 ffmpeg-python
 aiohttp
 motor
