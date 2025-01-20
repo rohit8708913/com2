@@ -185,9 +185,8 @@ async def skip(e, userid):
 async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
+    ph_path = None  # Ensure ph_path is initialized
 
-    # Initialize variables
-    ph_path = None  # Ensure it exists
     try:
         # Check for existing processes
         if os.path.isdir(f'ffmpeg/{UID}') and os.path.isdir(f'encode/{UID}'):
@@ -217,6 +216,7 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
 
         await ms.edit("🗜 **Compressing...**")
         cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} "{Output_Path}" -y"""
+        print(f"Running FFmpeg command: {cmd}")  # Log FFmpeg command
 
         # Run FFmpeg command
         process = await asyncio.create_subprocess_shell(
@@ -224,9 +224,11 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         )
         stdout, stderr = await process.communicate()
 
-        # Handle FFmpeg errors
+        # Log FFmpeg output
+        if stdout:
+            print("FFmpeg Output:", stdout.decode())
         if stderr:
-            await ms.edit(f"FFmpeg Error:\n\n{stderr.decode()}")
+            print("FFmpeg Error Output:", stderr.decode())
             raise Exception("FFmpeg processing failed.")
 
         # Thumbnail handling
@@ -256,7 +258,7 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
 
     except Exception as e:
         print(f"Error on line {sys.exc_info()[-1].tb_lineno}: {type(e).__name__}: {e}")
-        await ms.edit("⚠️ An error occurred. Please try again.")
+        await ms.edit(f"⚠️ An error occurred: {e}")
 
     finally:
         # Cleanup temporary files and directories
