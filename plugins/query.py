@@ -85,7 +85,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
     elif data == '480pc':
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
-            ffmpegcode = (
+            ffmpeg = (
                 "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
                 "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
                 "-vf \"scale='if(gt(iw,ih),840,-1)':'if(gt(iw,ih),-1,480)',drawtext=text='by @Javpostr':fontcolor=white@0.9:fontsize=36:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=10\" "
