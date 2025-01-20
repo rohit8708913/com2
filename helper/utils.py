@@ -185,7 +185,7 @@ async def skip(e, userid):
 async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
-    ph_path = None  # Ensure ph_path is initialized
+    ph_path = None
 
     try:
         # Check for existing processes
@@ -216,40 +216,37 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
 
         await ms.edit("🗜 **Compressing...**")
         cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} "{Output_Path}" -y"""
-        print(f"Running FFmpeg command: {cmd}")  # Log FFmpeg command
+        print(f"Running FFmpeg command: {cmd}")  # Debugging
 
-        # Run FFmpeg command
+        # Run FFmpeg with real-time output logging
         process = await asyncio.create_subprocess_shell(
-            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+            cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
         )
-        stdout, stderr = await process.communicate()
 
-        # Log FFmpeg output
-        if stdout:
-            print("FFmpeg Output:", stdout.decode())
-        if stderr:
-            print("FFmpeg Error Output:", stderr.decode())
+        while True:
+            line = await process.stderr.readline()
+            if not line:
+                break
+            print(line.decode().strip())  # Log FFmpeg progress
+
+        # Check process completion
+        await process.wait()
+        if process.returncode != 0:
             raise Exception("FFmpeg processing failed.")
 
         # Thumbnail handling
         if file.thumbs or c_thumb:
             ph_path = await bot.download_media(c_thumb or file.thumbs[0].file_id)
 
-        # Calculate compression ratio
-        org_size = Path(File_Path).stat().st_size
-        com_size = Path(Output_Path).stat().st_size
-        compression_ratio = 100 - ((com_size / org_size) * 100)
-
-        # Prepare upload caption
-        caption_text = f"{media.caption}\nby @Javpostr" if media.caption else "by @Javpostr"
-
-        # Upload the compressed video
+        # Upload compressed video
         await ms.edit("⚠️__**Please wait...**__\n**Uploading...**")
         await bot.send_document(
             UID,
             document=Output_Path,
             thumb=ph_path,
-            caption=f"Compressed by {compression_ratio:.2f}%\n{caption_text}",
+            caption="Your video is compressed successfully!",
             progress=progress_for_pyrogram,
             progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
         )
@@ -261,8 +258,8 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         await ms.edit(f"⚠️ An error occurred: {e}")
 
     finally:
-        # Cleanup temporary files and directories
+        # Cleanup
         shutil.rmtree(f"ffmpeg/{UID}", ignore_errors=True)
         shutil.rmtree(f"encode/{UID}", ignore_errors=True)
-        if ph_path and os.path.exists(ph_path):  # Check before attempting to delete
+        if ph_path and os.path.exists(ph_path):
             os.remove(ph_path)
