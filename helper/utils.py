@@ -186,11 +186,13 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
 
-    # Check for existing processes
-    if os.path.isdir(f'ffmpeg/{UID}') and os.path.isdir(f'encode/{UID}'):
-        return await ms.edit("**⚠️ Yᴏᴜ ᴄᴀɴ ᴄᴏᴍᴘʀᴇss ᴏɴʟʏ ᴏɴᴇ ғɪʟᴇ ᴀᴛ ᴀ ᴛɪᴍᴇ\n\nAs ᴛʜɪs ʜᴇʟᴘs ʀᴇᴅᴜᴄᴇ sᴇʀᴠᴇʀ ʟᴏᴀᴅ.**")
-
+    # Initialize variables
+    ph_path = None  # Ensure it exists
     try:
+        # Check for existing processes
+        if os.path.isdir(f'ffmpeg/{UID}') and os.path.isdir(f'encode/{UID}'):
+            return await ms.edit("**⚠️ Yᴏᴜ ᴄᴀɴ ᴄᴏᴍᴘʀᴇss ᴏɴʟʏ ᴏɴᴇ ғɪʟᴇ ᴀᴛ ᴀ ᴛɪᴍᴇ\n\nAs ᴛʜɪs ʜᴇʟᴘs ʀᴇᴅᴜᴄᴇ sᴇʀᴠᴇʀ ʟᴏᴀᴅ.**")
+
         # Fetch video details
         media = query.message.reply_to_message
         file = getattr(media, media.media.value)
@@ -228,7 +230,6 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
             raise Exception("FFmpeg processing failed.")
 
         # Thumbnail handling
-        ph_path = None
         if file.thumbs or c_thumb:
             ph_path = await bot.download_media(c_thumb or file.thumbs[0].file_id)
 
@@ -261,5 +262,5 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         # Cleanup temporary files and directories
         shutil.rmtree(f"ffmpeg/{UID}", ignore_errors=True)
         shutil.rmtree(f"encode/{UID}", ignore_errors=True)
-        if ph_path and os.path.exists(ph_path):
+        if ph_path and os.path.exists(ph_path):  # Check before attempting to delete
             os.remove(ph_path)
