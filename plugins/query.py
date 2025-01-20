@@ -184,8 +184,8 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 
             except Exception as e:
                 print(e)
-                    
-
+            finally:
+                await bot.send_message(chat_id=query.from_user.id, text="Subtitle handling process completed.")
 
     elif data == "add_watermark":
         try:
