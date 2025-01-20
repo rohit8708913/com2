@@ -242,14 +242,27 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
 
         # Upload compressed video
         await ms.edit("⚠️__**Please wait...**__\n**Uploading...**")
-        await bot.send_document(
-            UID,
-            document=Output_Path,
-            thumb=ph_path,
-            caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
-            progress=progress_for_pyrogram,
-            progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
-        )
+
+        # Check if the file is a video and send accordingly
+        if file_extension.lower() in ['.mp4', '.mov', '.avi', '.mkv']:
+            await bot.send_video(
+                UID,
+                video=Output_Path,
+                thumb=ph_path,
+                caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
+                progress=progress_for_pyrogram,
+                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+            )
+        else:
+            # If it's not a video, send it as a document
+            await bot.send_document(
+                UID,
+                document=Output_Path,
+                thumb=ph_path,
+                caption="Your file has been processed successfully!\n\n**Done by @Javpostr**",
+                progress=progress_for_pyrogram,
+                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+            )
 
         await ms.delete()
 
