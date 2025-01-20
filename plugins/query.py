@@ -140,20 +140,35 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         except Exception as e:
             print(e)
 
-    elif data == 'add_watermark':
+    elif data == "add_watermark":
         try:
+            # Retrieve the custom thumbnail
             c_thumb = await db.get_thumbnail(query.from_user.id)
+
+            # Define output directory and file
+            output_dir = "encode/7328629001"
+            output_file = os.path.join(output_dir, "7328629001.mp4")
+
+            # Ensure the output directory exists
+            os.makedirs(output_dir, exist_ok=True)
+
+            # Define FFmpeg command
             ffmpeg = (
-                "-preset veryfast -c:v libx264 -s 1920x1080 -crf 30 "
-                "-vf \"drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=h-th-10:box=1:boxcolor=black@0.5\" "
-                "-c:a libopus -b:a 32k -c:s copy -map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+                f"-preset veryfast -c:v libx264 -s 1920x1080 -crf 30 "
+                f"-vf \"drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=h-th-10:box=1:boxcolor=black@0.5\" "
+                f"-c:a libopus -b:a 32k -c:s copy -map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
+                f"-y {output_file}"  # Output file path with overwrite enabled
             )
+
+            # Call CompressVideo function
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+
         except Exception as e:
-            print(e)
+            # Print error for debugging
+            print(f"Error during add_watermark: {e}")
 
     
-    elif data.startswith('add_subtitles'):
+    elif data == 'add_subtitles':
         try:
             await query.message.edit(
                 text="Please send the subtitles file in `.srt` format. Ensure the filename and the subtitles match the video's timing.",
