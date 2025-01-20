@@ -91,7 +91,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
                 "-vf \"scale='if(gt(iw,ih),840,-1)':'if(gt(iw,ih),-1,480)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
                 "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
             )
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=None)
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
 
@@ -104,7 +104,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
                 "-vf \"scale='if(gt(iw,ih),1280,-1)':'if(gt(iw,ih),-1,720)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
                 "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
             )
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=None)
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
 
@@ -117,7 +117,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
                 "-vf \"scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
                 "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
             )
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=None)
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
 
@@ -130,7 +130,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
                 "-vf \"scale='if(gt(iw,ih),3840,-1)':'if(gt(iw,ih),-1,2160)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
                 "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
             )
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=None)
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
 
@@ -221,7 +221,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 )
 
             # Call CompressVideo function but set compress=False to avoid compression
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=None)
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
 
             # Send the processed video with watermark to the user
             await bot.send_video(
