@@ -215,7 +215,7 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         )
 
         await ms.edit("🗜 **Compressing...**")
-        cmd = f"""ffmpeg -i "{dl}" -i watermark.png {ffmpegcode} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[scaled]; [scaled][1:v]overlay=10:10" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
+        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[scaled]; [scaled]overlay=10:10" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
         print(f"Running FFmpeg command: {cmd}")  # Debugging
 
         # Run FFmpeg with real-time output logging
@@ -310,7 +310,7 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
         )
 
         await ms.edit("🗜 **Compressing...**")
-        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[subscaled]; [subscaled]subtitles={subtitle_file_path}" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
+        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[scaled]; [scaled]subtitles={subtitle_file_path}" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
         print(f"Running FFmpeg command: {cmd}")  # Debugging
 
         # Run FFmpeg with real-time output logging
