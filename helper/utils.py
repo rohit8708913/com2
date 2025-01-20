@@ -195,12 +195,12 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         # Fetch video details
         media = query.message.reply_to_message
         file = getattr(media, media.media.value)
-        filename = str(file.file_name)
-        file_extension = os.path.splitext(filename)[-1] or ".mp4"  # Ensure a default extension if missing
+        filename = str(file.file_name or f"{UID}_video.mp4")  # Handle no filename case
+        file_extension = os.path.splitext(filename)[-1] or ".mp4"
         Download_DIR = f"ffmpeg/{UID}"
         Output_DIR = f"encode/{UID}"
         File_Path = f"{Download_DIR}/{filename}"
-        Output_Path = f"{Output_DIR}/{UID}{file_extension}"  # Add extension to output path
+        Output_Path = f"{Output_DIR}/{UID}{file_extension}"
 
         # Start download
         await ms.edit('⚠️__**Please wait...**__\n**Tʀyɪɴɢ Tᴏ Dᴏᴡɴʟᴏᴀᴅɪɴɢ....**')
@@ -246,7 +246,7 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
             UID,
             document=Output_Path,
             thumb=ph_path,
-            caption="Your video is compressed successfully!",
+            caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
             progress=progress_for_pyrogram,
             progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
         )
