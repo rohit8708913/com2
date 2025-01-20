@@ -1,7 +1,6 @@
 import asyncio
 import math, time
 from . import *
-from plugins.query import *
 from datetime import datetime as dt
 import sys
 import shutil
