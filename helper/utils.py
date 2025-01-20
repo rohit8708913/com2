@@ -263,12 +263,15 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         xx = ts(int((ees - es).seconds) * 1000)
         xxx = ts(int((eees - ees).seconds) * 1000)
 
+        # Get the original caption and add the 'by @Javpostr' line
+        caption_text = f"{media.caption}\nby @Javpostr" if media.caption else "by @Javpostr"
+
         await ms.edit("⚠️__**Please wait...**__\n**Tʀyɪɴɢ Tᴏ Uᴩʟᴏᴀᴅɪɴɢ....**")
         await bot.send_document(
             UID,
             document=Output_Path,
             thumb=ph_path,
-            caption=Config.caption.format(filename, humanbytes(org), humanbytes(com), per, x, xx, xxx),
+            caption=caption_text,
             progress=progress_for_pyrogram,
             progress_args=("⚠️__**Please wait...**__\n🌨️ **Uᴩʟᴏᴀᴅ Sᴛᴀʀᴛᴇᴅ....**", ms, time.time())
         )
