@@ -184,6 +184,7 @@ async def skip(e, userid):
 
 async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
+    subtitle_file_path = None  # When no subtitle is provided
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
     ph_path = None
 
