@@ -196,11 +196,11 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         media = query.message.reply_to_message
         file = getattr(media, media.media.value)
         filename = str(file.file_name)
-        file_extension = os.path.splitext(filename)[-1]
+        file_extension = os.path.splitext(filename)[-1] or ".mp4"  # Ensure a default extension if missing
         Download_DIR = f"ffmpeg/{UID}"
         Output_DIR = f"encode/{UID}"
         File_Path = f"{Download_DIR}/{filename}"
-        Output_Path = f"{Output_DIR}/{UID}{file_extension}"
+        Output_Path = f"{Output_DIR}/{UID}{file_extension}"  # Add extension to output path
 
         # Start download
         await ms.edit('⚠️__**Please wait...**__\n**Tʀyɪɴɢ Tᴏ Dᴏᴡɴʟᴏᴀᴅɪɴɢ....**')
