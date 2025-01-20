@@ -140,7 +140,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             ffmpeg_code = await db.get_ffmpegcode(query.from_user.id)
             if ffmpeg_code:
                 ffmpeg_code += " -vf \"drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:x=10:y=h-th-10\""
-                await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=None)
+                await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
 
         except Exception as e:
             print(e)
@@ -180,32 +180,12 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 )
                     # Process the video (compression is set to False because no compression is needed here)
                     await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
-                    await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
-                    # Send the video with subtitles and watermark
-                    await bot.send_video(
-                        chat_id=query.from_user.id,
-                        video="output.mp4",
-                        caption="Here’s your video with subtitles and watermark added!",
-                        thumb=c_thumb
-                    )
-                else:
-                    await query.message.reply_text(
-                        "Invalid file format. Please upload a valid `.srt` file.",
-                        reply_markup=InlineKeyboardMarkup([
-                            [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
-                        ])
-                    )
+                    await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
 
-            except TimeoutError:
-                await query.message.reply_text(
-                    "Error!!\n\nRequest timed out.\nRestart the process using the menu.",
-                    reply_markup=InlineKeyboardMarkup([
-                        [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
-                    ])
-                )
+            except Exception as e:
+                print(e)
+                    
 
-        except Exception as e:
-            print(f"Error during add_subtitles: {e}")
 
     elif data == "add_watermark":
         try:
