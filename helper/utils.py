@@ -215,7 +215,7 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         )
 
         await ms.edit("🗜 **Compressing...**")
-        cmd = f"""ffmpeg -i "{dl}" {ffmpeg} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset veryfast -threads 4 -max_alloc 2G "{Output_Path}" -y"""
+        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset veryfast -threads 4 -max_alloc 2G "{Output_Path}" -y"""
         print(f"Running FFmpeg command: {cmd}")  # Debugging
 
         # Run FFmpeg with real-time output logging
