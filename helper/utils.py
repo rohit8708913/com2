@@ -184,7 +184,6 @@ async def skip(e, userid):
 
 async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
-    subtitle_file_path = None  # When no subtitle is provided
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
     ph_path = None
 
@@ -216,10 +215,102 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         )
 
         await ms.edit("🗜 **Compressing...**")
-        if subtitle_file_path:
-            cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2, overlay=10:10, subtitles={subtitle_file_path}" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
+        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2, overlay=10:10" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
+        print(f"Running FFmpeg command: {cmd}")  # Debugging
+
+        # Run FFmpeg with real-time output logging
+        process = await asyncio.create_subprocess_shell(
+            cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        while True:
+            line = await process.stderr.readline()
+            if not line:
+                break
+            print(line.decode().strip())  # Log FFmpeg progress
+
+        # Check process completion
+        await process.wait()
+        if process.returncode != 0:
+            raise Exception("FFmpeg processing failed.")
+
+        # Thumbnail handling
+        if file.thumbs or c_thumb:
+            ph_path = await bot.download_media(c_thumb or file.thumbs[0].file_id)
+
+        # Upload compressed video
+        await ms.edit("⚠️__**Please wait...**__\n**Uploading...**")
+
+        # Check if the file is a video and send accordingly
+        if file_extension.lower() in ['.mp4', '.mov', '.avi', '.mkv']:
+            await bot.send_video(
+                UID,
+                video=Output_Path,
+                thumb=ph_path,
+                caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
+                progress=progress_for_pyrogram,
+                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+            )
         else:
-            cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2, overlay=10:10" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
+            # If it's not a video, send it as a document
+            await bot.send_document(
+                UID,
+                document=Output_Path,
+                thumb=ph_path,
+                caption="Your file has been processed successfully!\n\n**Done by @Javpostr**",
+                progress=progress_for_pyrogram,
+                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+            )
+
+        await ms.delete()
+
+    except Exception as e:
+        print(f"Error on line {sys.exc_info()[-1].tb_lineno}: {type(e).__name__}: {e}")
+        await ms.edit(f"⚠️ An error occurred: {e}")
+
+    finally:
+        # Cleanup
+        shutil.rmtree(f"ffmpeg/{UID}", ignore_errors=True)
+        shutil.rmtree(f"encode/{UID}", ignore_errors=True)
+        if ph_path and os.path.exists(ph_path):
+            os.remove(ph_path)
+
+async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
+    UID = query.from_user.id
+    ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
+    ph_path = None
+
+    try:
+        # Check for existing processes
+        if os.path.isdir(f'ffmpeg/{UID}') and os.path.isdir(f'encode/{UID}'):
+            return await ms.edit("**⚠️ Yᴏᴜ ᴄᴀɴ ᴄᴏᴍᴘʀᴇss ᴏɴʟʏ ᴏɴᴇ ғɪʟᴇ ᴀᴛ ᴀ ᴛɪᴍᴇ\n\nAs ᴛʜɪs ʜᴇʟᴘs ʀᴇᴅᴜᴄᴇ sᴇʀᴠᴇʀ ʟᴏᴀᴅ.**")
+
+        # Fetch video details
+        media = query.message.reply_to_message
+        file = getattr(media, media.media.value)
+        filename = str(file.file_name or f"{UID}_video.mp4")  # Handle no filename case
+        file_extension = os.path.splitext(filename)[-1] or ".mp4"
+        Download_DIR = f"ffmpeg/{UID}"
+        Output_DIR = f"encode/{UID}"
+        File_Path = f"{Download_DIR}/{filename}"
+        Output_Path = f"{Output_DIR}/{UID}{file_extension}"
+
+        # Start download
+        await ms.edit('⚠️__**Please wait...**__\n**Tʀyɪɴɢ Tᴏ Dᴏᴡɴʟᴏᴀᴅɪɴɢ....**')
+        os.makedirs(Download_DIR, exist_ok=True)
+        os.makedirs(Output_DIR, exist_ok=True)
+
+        dl = await bot.download_media(
+            message=file,
+            file_name=File_Path,
+            progress=progress_for_pyrogram,
+            progress_args=("\n⚠️__**Please wait...**__\n\n☃️ **Dᴏᴡɴʟᴏᴀᴅ Sᴛᴀʀᴛᴇᴅ....**", ms, time.time())
+        )
+
+        await ms.edit("🗜 **Compressing...**")
+        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2, overlay=10:10, subtitles={subtitle_file_path}" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
         print(f"Running FFmpeg command: {cmd}")  # Debugging
 
         # Run FFmpeg with real-time output logging
