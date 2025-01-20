@@ -1,6 +1,7 @@
 import os
 import time
 import asyncio
+import ffmpeg
 import sys
 import humanize
 from pyrogram import Client, filters
