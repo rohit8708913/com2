@@ -1,5 +1,5 @@
-async def CompressVideo(bot, query, ffmpegcode, c_thumb):
-    UID = query.from_user.id
+#async def CompressVideo(bot, query, ffmpegcode, c_thumb):
+   # UID = query.from_user.id
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
 
     if os.path.isdir(f'ffmpeg/{UID}') and os.path.isdir(f'encode/{UID}'):
