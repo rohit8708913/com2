@@ -176,7 +176,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 
                     # Process the video (compression is set to False because no compression is needed here)
                     await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
-                    await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False)
+                    await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
 
                     # Send the video with subtitles and watermark
                     await bot.send_video(
@@ -218,7 +218,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             )
 
             # Call CompressVideo function but set compress=False to avoid compression
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False)
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
 
             # Send the processed video with watermark to the user
             await bot.send_video(
