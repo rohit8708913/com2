@@ -87,75 +87,152 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 
         else:
 
-            BTNS = [
-                [InlineKeyboardButton(text='480ᴘ', callback_data='480pc'), InlineKeyboardButton(
-                    text='720ᴘ', callback_data='720pc')],
-                [InlineKeyboardButton(text='1080ᴘ', callback_data='1080pc'), InlineKeyboardButton(
-                    text='4ᴋ', callback_data='2160pc')],
-                [InlineKeyboardButton(
-                    text='Cᴜsᴛᴏᴍ Eɴᴄᴏᴅɪɴɢ 🗜️', callback_data='custompc')],
-                [InlineKeyboardButton(text='✘ Cʟᴏꜱᴇ', callback_data='close'), InlineKeyboardButton(
-                    text='⟸ Bᴀᴄᴋ', callback_data='option')]
-            ]
+    BTNS = [
+        [InlineKeyboardButton(text='480ᴘ', callback_data='480pc'), InlineKeyboardButton(
+            text='720ᴘ', callback_data='720pc')],
+        [InlineKeyboardButton(text='1080ᴘ', callback_data='1080pc'), InlineKeyboardButton(
+            text='4ᴋ', callback_data='2160pc')],
+        [InlineKeyboardButton(text='Aᴅᴅ Wᴀᴛᴇʀᴍᴀʀᴋ', callback_data='add_watermark')],
+        [InlineKeyboardButton(text='Aᴅᴅ Sᴜʙᴛɪᴛʟᴇꜱ', callback_data='add_subtitles')],
+        [InlineKeyboardButton(
+            text='Cᴜsᴛᴏᴍ Eɴᴄᴏᴅɪɴɢ 🗜️', callback_data='custompc')],
+        [InlineKeyboardButton(text='✘ Cʟᴏꜱᴇ', callback_data='close'), InlineKeyboardButton(
+            text='⟸ Bᴀᴄᴋ', callback_data='option')]
+    ]
             await query.message.edit(text='**Select the Compression Method Below 👇 **', reply_markup=InlineKeyboardMarkup(BTNS))
 
-    elif data == '480pc':
-        try:
-            c_thumb = await db.get_thumbnail(query.from_user.id)
-            ffmpeg = "-preset veryfast -c:v libx264 -s 840x480 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' -pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -c:s copy -map 0 -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+   elif data == '480pc':
+    try:
+        c_thumb = await db.get_thumbnail(query.from_user.id)
+        ffmpeg = (
+            "-preset veryfast -c:v libx264 -s 840x480 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+            "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -vf \"drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:x=10:y=h-th-10\" "
+            "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+        )
+        await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+    except Exception as e:
+        print(e)
 
-        except Exception as e:
-            print(e)
+elif data == '720pc':
+    try:
+        c_thumb = await db.get_thumbnail(query.from_user.id)
+        ffmpeg = (
+            "-preset veryfast -c:v libx264 -s 1280x720 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+            "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -vf \"drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:x=10:y=h-th-10\" "
+            "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+        )
+        await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+    except Exception as e:
+        print(e)
 
-    elif data == '720pc':
-        try:
-            c_thumb = await db.get_thumbnail(query.from_user.id)
-            ffmpeg = "-preset veryfast -c:v libx264 -s 1280x720 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' -pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -c:s copy -map 0 -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+elif data == '1080pc':
+    try:
+        c_thumb = await db.get_thumbnail(query.from_user.id)
+        ffmpeg = (
+            "-preset veryfast -c:v libx264 -s 1920x1080 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+            "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -vf \"drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:x=10:y=h-th-10\" "
+            "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+        )
+        await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+    except Exception as e:
+        print(e)
 
-        except Exception as e:
-            print(e)
+elif data == '2160pc':
+    try:
+        c_thumb = await db.get_thumbnail(query.from_user.id)
+        ffmpeg = (
+            "-preset veryfast -c:v libx264 -s 3840x2160 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+            "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -vf \"drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:x=10:y=h-th-10\" "
+            "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+        )
+        await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+    except Exception as e:
+        print(e)
 
-    elif data == '1080pc':
+elif data == 'custompc':
+    try:
+        c_thumb = await db.get_thumbnail(query.from_user.id)
+        ffmpeg_code = await db.get_ffmpegcode(query.from_user.id)
 
-        try:
-            c_thumb = await db.get_thumbnail(query.from_user.id)
-            ffmpeg = "-preset veryfast -c:v libx264 -s 1920x1080 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' -pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -c:s copy -map 0 -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+        if ffmpeg_code:
+            # Adding watermark to the custom FFMPEG code
+            ffmpeg_code += " -vf \"drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:x=10:y=h-th-10\""
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg_code, c_thumb=c_thumb)
 
-        except Exception as e:
-            print(e)
+# Add new elif blocks for watermark and subtitles
 
-    elif data == '2160pc':
+elif data == 'add_watermark':
+    try:
+        c_thumb = await db.get_thumbnail(query.from_user.id)
+        ffmpeg = (
+            "-preset veryfast -c:v libx264 -s 1920x1080 -crf 30 "
+            "-vf \"drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=h-th-10:box=1:boxcolor=black@0.5\" "
+            "-c:a libopus -b:a 32k -c:s copy -map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+        )
+        await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
 
-        try:
-            c_thumb = await db.get_thumbnail(query.from_user.id)
-            ffmpeg = "-preset veryfast -c:v libx264 -s 3840x2160 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' -pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k -c:s copy -map 0 -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
+    except Exception as e:
+        print(e)
 
-        except Exception as e:
-            print(e)
+elif data == 'add_subtitles':
+    try:
+        await query.message.edit(
+            text="Please send the subtitles file in `.srt` format. Ensure the filename and the subtitles match the video's timing.",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+            ])
+        )
 
-    elif data == 'custompc':
+        @bot.on_message(filters.document & filters.user(query.from_user.id))
+        async def handle_subtitle_file(client, message):
+            try:
+                # Ensure the file is .srt format
+                if message.document.file_name.endswith('.srt'):
+                    subtitle_file_path = await message.download()
+                    c_thumb = await db.get_thumbnail(query.from_user.id)
 
-        try:
-            c_thumb = await db.get_thumbnail(query.from_user.id)
-            ffmpeg_code = await db.get_ffmpegcode(query.from_user.id)
+                    # Prepare the ffmpeg command to add subtitles
+                    ffmpeg = (
+                        f"-i input.mp4 -vf \"subtitles={subtitle_file_path}\" "
+                        "-c:v copy -c:a copy -c:s mov_text -metadata:s:s:0 language=eng output.mp4"
+                    )
 
-            if ffmpeg_code:
-                await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg_code, c_thumb=c_thumb)
+                    await CompressVideo(
+                        bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False
+                    )
 
-            else:
-                BUTT = [
-                    [InlineKeyboardButton(
-                        text='Sᴇᴛ Fғᴍᴘᴇɢ Cᴏᴅᴇ', callback_data='setffmpeg')],
-                    [InlineKeyboardButton(
-                        text='⟸ Bᴀᴄᴋ', callback_data=f'compress-{query.from_user.id}')]
-                ]
-                await query.message.edit(text="You Don't Have Any Custom FFMPEG Code. 🛃", reply_markup=InlineKeyboardMarkup(BUTT))
-        except Exception as e:
-            print(e)
+                    # Send the video in the same format
+                    await bot.send_video(
+                        chat_id=query.from_user.id,
+                        video="output.mp4",
+                        caption="Here's your video with subtitles added!",
+                        thumb=c_thumb
+                    )
+                else:
+                    await message.reply_text(
+                        "Invalid file format. Please upload a valid `.srt` file.",
+                        reply_markup=InlineKeyboardMarkup([
+                            [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                        ])
+                    )
+            except Exception as e:
+                print(e)
+                await message.reply_text(
+                    "An error occurred while processing your subtitle file. Please try again."
+                )
+    except Exception as e:
+        print(e)
+
+        else:
+            BUTT = [
+                [InlineKeyboardButton(
+                    text='Sᴇᴛ Fғᴍᴘᴇɢ Cᴏᴅᴇ', callback_data='setffmpeg')],
+                [InlineKeyboardButton(
+                    text='⟸ Bᴀᴄᴋ', callback_data=f'compress-{query.from_user.id}')]
+            ]
+            await query.message.edit(text="You Don't Have Any Custom FFMPEG Code. 🛃", reply_markup=InlineKeyboardMarkup(BUTT))
+    except Exception as e:
+        print(e)
 
     elif data.startswith("close"):
 
