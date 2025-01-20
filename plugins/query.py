@@ -180,12 +180,19 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 )
                     # Process the video (compression is set to False because no compression is needed here)
                     await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
-                    await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
-
+                    await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
+                else:
+                    await query.message.reply_text("Invalid file format. Please send a valid `.srt` file.")
+            except TimeoutError:
+                await query.message.reply_text("**Error:** You took too long to respond. Please try again.")
             except Exception as e:
-                print(e)
-            finally:
-                await bot.send_message(chat_id=query.from_user.id, text="Subtitle handling process completed.")
+                print(f"Error while processing subtitles: {e}")
+                await query.message.reply_text("An error occurred while processing your subtitles. Please try again.")
+        except Exception as e:
+            print(f"General error in 'add_subtitles': {e}")
+            await query.message.reply_text("An unexpected error occurred. Please try again later.")
+        finally:
+            await bot.send_message(chat_id=query.from_user.id, text="Subtitle handling process completed.")
 
     elif data == "add_watermark":
         try:
