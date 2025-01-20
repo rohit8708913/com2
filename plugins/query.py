@@ -139,7 +139,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         except Exception as e:
             print(e)
 
-    elif data.startswith('add_watermark'):
+    elif data == 'add_watermark':
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
@@ -152,8 +152,71 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             print(e)
 
     
+    elif data.startswith('add_subtitles'):
+        try:
+            await query.message.edit(
+                text="Please send the subtitles file in `.srt` format. Ensure the filename and the subtitles match the video's timing.",
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                ])
+            )
 
-    elif data.startswith("close"):
+            try:
+            # Ask the user for the subtitle file
+                subtitle_message = await bot.ask(
+                    chat_id=query.from_user.id,
+                    text="Please upload your subtitles file in `.srt` format within 30 seconds.",
+                    filters=filters.document,
+                    timeout=30,
+                )
+
+                if subtitle_message.document.file_name.endswith('.srt'):
+                # Download the subtitle file
+                    subtitle_file_path = await subtitle_message.download()
+                    c_thumb = await db.get_thumbnail(query.from_user.id)
+
+                # FFMPEG command to add subtitles
+                    ffmpeg = (
+                        f"-i input.mp4 -vf \"subtitles={subtitle_file_path}\" "
+                        "-c:v copy -c:a copy -c:s mov_text -metadata:s:s:0 language=eng output.mp4"
+                    )
+
+                # Process the video
+                    await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
+                    await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False)
+
+                # Send the video
+                    await bot.send_video(
+                        chat_id=query.from_user.id,
+                        video="output.mp4",
+                        caption="Here's your video with subtitles added!",
+                        thumb=c_thumb
+                    )
+                else:
+                    await query.message.reply_text(
+                        "Invalid file format. Please upload a valid `.srt` file.",
+                        reply_markup=InlineKeyboardMarkup([
+                            [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                        ])
+                    )
+
+            except TimeoutError:
+                await query.message.reply_text(
+                    "Error!!\n\nRequest timed out.\nRestart the process using the menu.",
+                    reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                    ])
+                )
+        except Exception as e:
+            print(e)
+            await query.message.reply_text(
+                "An error occurred while processing your subtitle file. Please try again.",
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                ])
+            )
+
+    elif data == "close":
         user_id = data.split('-')[1]
         if int(user_id) not in [query.from_user.id, 0]:
             return await query.answer(f"⚠️ Hᴇʏ {query.from_user.first_name}\nTʜɪs ɪs ɴᴏᴛ ʏᴏᴜʀ ғɪʟᴇ ʏᴏᴜ ᴄᴀɴ'ᴛ ᴅᴏ ᴀɴʏ ᴏᴘᴇʀᴀᴛɪᴏɴ", show_alert=True)
