@@ -211,10 +211,10 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 
             # Define FFmpeg command for adding watermark without compression
             ffmpeg = (
-                f"-i input.mp4 -c:v libx264 -crf 30 -preset veryfast "
-                f"-vf \"drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=10:box=1:boxcolor=black@0.5\" "
-                f"-c:a copy -c:s copy -map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
-                f"-y output.mp4"  # Output file path with overwrite enabled
+                "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-vf \"scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
             )
 
             # Call CompressVideo function but set compress=False to avoid compression
