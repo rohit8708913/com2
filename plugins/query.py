@@ -10,6 +10,7 @@ from helper.utils import Compress_Stats, skip, CompressVideo
 from helper.database import db
 from script import Txt
 
+
 @Client.on_callback_query()
 async def Cb_Handle(bot: Client, query: CallbackQuery):
     data = query.data
@@ -85,11 +86,11 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpegcode = (
-    "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw,ih),840,-1)':'if(gt(iw,ih),-1,480)',drawtext=text='by @Javpostr':fontcolor=white@0.9:fontsize=36:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
+                "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-vf \"scale='if(gt(iw,ih),840,-1)':'if(gt(iw,ih),-1,480)',drawtext=text='by @Javpostr':fontcolor=white@0.9:fontsize=36:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
@@ -98,11 +99,11 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
-    "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw,ih),1280,-1)':'if(gt(iw,ih),-1,720)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
+                "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-vf \"scale='if(gt(iw,ih),1280,-1)':'if(gt(iw,ih),-1,720)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
@@ -111,11 +112,11 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
-    "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
+                "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-vf \"scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
@@ -124,11 +125,11 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
-    "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw,ih),3840,-1)':'if(gt(iw,ih),-1,2160)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
+                "-preset veryfast -c:v libx264 -x265-params 'bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1' "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-vf \"scale='if(gt(iw,ih),3840,-1)':'if(gt(iw,ih),-1,2160)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
@@ -145,94 +146,94 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             print(e)
 
     elif data == 'add_subtitles':
-    try:
-        await query.message.edit(
-            text="Please send the subtitles file in `.srt` format. Ensure the filename and the subtitles match the video's timing.",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
-            ])
-        )
-
         try:
-            # Ask the user for the subtitle file
-            subtitle_message = await bot.ask(
-                chat_id=query.from_user.id,
-                text="Please upload your subtitles file in `.srt` format within 30 seconds.",
-                filters=filters.document,
-                timeout=30,
-            )
-
-            if subtitle_message.document.file_name.endswith('.srt'):
-                # Download the subtitle file
-                subtitle_file_path = await subtitle_message.download()
-                c_thumb = await db.get_thumbnail(query.from_user.id)
-
-                # FFmpeg command to add both watermark and subtitles
-                ffmpeg = (
-                    f"-i input.mp4 -vf \"subtitles={subtitle_file_path},drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=10:box=1:boxcolor=black@0.5\" "
-                    "-c:v copy -c:a copy -c:s mov_text -metadata:s:s:0 language=eng output.mp4"
-                )
-
-                # Process the video (compression is set to False because no compression is needed here)
-                await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
-                await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False)
-
-                # Send the video with subtitles and watermark
-                await bot.send_video(
-                    chat_id=query.from_user.id,
-                    video="output.mp4",
-                    caption="Here’s your video with subtitles and watermark added!",
-                    thumb=c_thumb
-                )
-            else:
-                await query.message.reply_text(
-                    "Invalid file format. Please upload a valid `.srt` file.",
-                    reply_markup=InlineKeyboardMarkup([
-                        [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
-                    ])
-                )
-
-        except TimeoutError:
-            await query.message.reply_text(
-                "Error!!\n\nRequest timed out.\nRestart the process using the menu.",
+            await query.message.edit(
+                text="Please send the subtitles file in `.srt` format. Ensure the filename and the subtitles match the video's timing.",
                 reply_markup=InlineKeyboardMarkup([
                     [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
                 ])
             )
 
-    except Exception as e:
-        print(f"Error during add_subtitles: {e}")
+            try:
+                # Ask the user for the subtitle file
+                subtitle_message = await bot.ask(
+                    chat_id=query.from_user.id,
+                    text="Please upload your subtitles file in `.srt` format within 30 seconds.",
+                    filters=filters.document,
+                    timeout=30,
+                )
 
-elif data == "add_watermark":
-    try:
-        # Retrieve the custom thumbnail
-        c_thumb = await db.get_thumbnail(query.from_user.id)
+                if subtitle_message.document.file_name.endswith('.srt'):
+                    # Download the subtitle file
+                    subtitle_file_path = await subtitle_message.download()
+                    c_thumb = await db.get_thumbnail(query.from_user.id)
 
-        # Define FFmpeg command for adding watermark without compression
-        ffmpeg = (
-            f"-i input.mp4 -c:v libx264 -crf 30 -preset veryfast "
-            f"-vf \"drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=10:box=1:boxcolor=black@0.5\" "
-            f"-c:a copy -c:s copy -map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
-            f"-y output.mp4"  # Output file path with overwrite enabled
-        )
+                    # FFmpeg command to add both watermark and subtitles
+                    ffmpeg = (
+                        f"-i input.mp4 -vf \"subtitles={subtitle_file_path},drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=10:box=1:boxcolor=black@0.5\" "
+                        "-c:v copy -c:a copy -c:s mov_text -metadata:s:s:0 language=eng output.mp4"
+                    )
 
-        # Call CompressVideo function but set compress=False to avoid compression
-        await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False)
+                    # Process the video (compression is set to False because no compression is needed here)
+                    await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
+                    await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False)
 
-        # Send the processed video with watermark to the user
-        await bot.send_video(
-            chat_id=query.from_user.id,
-            video="output.mp4",
-            caption="Here’s your video with the watermark added!",
-            thumb=c_thumb
-        )
+                    # Send the video with subtitles and watermark
+                    await bot.send_video(
+                        chat_id=query.from_user.id,
+                        video="output.mp4",
+                        caption="Here’s your video with subtitles and watermark added!",
+                        thumb=c_thumb
+                    )
+                else:
+                    await query.message.reply_text(
+                        "Invalid file format. Please upload a valid `.srt` file.",
+                        reply_markup=InlineKeyboardMarkup([
+                            [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                        ])
+                    )
 
-    except Exception as e:
-        # Print error for debugging
-        print(f"Error during add_watermark: {e}")
+            except TimeoutError:
+                await query.message.reply_text(
+                    "Error!!\n\nRequest timed out.\nRestart the process using the menu.",
+                    reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                    ])
+                )
+
+        except Exception as e:
+            print(f"Error during add_subtitles: {e}")
+
+    elif data == "add_watermark":
+        try:
+            # Retrieve the custom thumbnail
+            c_thumb = await db.get_thumbnail(query.from_user.id)
+
+            # Define FFmpeg command for adding watermark without compression
+            ffmpeg = (
+                f"-i input.mp4 -c:v libx264 -crf 30 -preset veryfast "
+                f"-vf \"drawtext=text='by @Javpostr':fontcolor=white:fontsize=24:x=10:y=10:box=1:boxcolor=black@0.5\" "
+                f"-c:a copy -c:s copy -map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
+                f"-y output.mp4"  # Output file path with overwrite enabled
+            )
+
+            # Call CompressVideo function but set compress=False to avoid compression
+            await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, compress=False)
+
+            # Send the processed video with watermark to the user
+            await bot.send_video(
+                chat_id=query.from_user.id,
+                video="output.mp4",
+                caption="Here’s your video with the watermark added!",
+                thumb=c_thumb
+            )
+
+        except Exception as e:
+            # Print error for debugging
+            print(f"Error during add_watermark: {e}")
 
             await query.message.reply_text(
-                "An error occurred while processing your subtitle file. Please try again.",
+                "An error occurred while processing your watermark request. Please try again.",
                 reply_markup=InlineKeyboardMarkup([
                     [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
                 ])
