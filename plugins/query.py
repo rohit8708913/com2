@@ -179,24 +179,28 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
                 # Download the subtitle file
                     subtitle_file_path = await subtitle_message.download()
 
-                # Get the existing video (the file that the user already sent)
-                    input_video_path = query.message.reply_to_message.video.file_name
-                    c_thumb = await db.get_thumbnail(query.from_user.id)
+            # Get the existing video (the file that the user already sent)
+                input_video_message = query.message.reply_to_message.video
+                if input_video_message:
+                # Download the video file (if not already on the server)
+                    input_video_path = await input_video_message.download()
 
-                # FFmpeg command to add both watermark and subtitles
-                    ffmpeg = (
-    f"-i {input_video_path} -vf \"subtitles='{subtitle_file_path}':force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',"
-    "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
-    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:"
-    "fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
-    "-c:a libopus -b:a 32k -ac 2 "
-    "-metadata:s:s:0 language=eng "
-    "-c:s mov_text -map 0:v -map 0:a -map 1:s"
-)
+                c_thumb = await db.get_thumbnail(query.from_user.id)
 
-                # Call CompVideo function to process the video
-                    await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
+            # FFmpeg command to add both watermark and subtitles
+                ffmpeg = (
+                    f"-i {input_video_path} -vf \"subtitles='{subtitle_file_path}':force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',"
+                    "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
+                    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:"
+                    "fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                    "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
+                    "-c:a libopus -b:a 32k -ac 2 "
+                    "-metadata:s:s:0 language=eng "
+                    "-c:s mov_text -map 0:v -map 0:a -map 1:s"
+                )
+
+            # Call CompVideo function to process the video
+                await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
 
             except asyncio.TimeoutError:
                 await query.message.edit(
