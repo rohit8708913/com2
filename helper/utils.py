@@ -312,7 +312,7 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
         await ms.edit("🗜 **Compressing...**")
         
         # Fixing FFmpeg command syntax and escaping issues
-        cmd = f"""ffmpeg -i "{dl}" -vf "subtitles='{subtitle_file_path}',scale=if(gte(iw\\,2)*2\\,iw\\,ceil(iw/2)*2):if(gte(ih\\,2)*2\\,ih\\,ceil(ih/2)*2)" -preset ultrafast -crf 23 -c:v libx264 {ffmpegcode} "{Output_Path}" -y"""
+        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -movflags +faststart "{Output_Path}" -y"""
         print(f"Running FFmpeg command: {cmd}")  # Debugging
 
         # Run FFmpeg with real-time output logging
