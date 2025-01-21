@@ -156,6 +156,7 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 
     elif data == 'add_subtitles':
         try:
+        # Ask the user for the subtitle file after video is sent
             await query.message.edit(
                 text="Please send the subtitles file in `.srt` format. Ensure the filename and the subtitles match the video's timing.",
                 reply_markup=InlineKeyboardMarkup([
@@ -164,45 +165,36 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             )
 
             try:
-            # Ask the user for the video file
-                video_message = await bot.ask(
+            # Ask the user for the subtitle file
+                subtitle_message = await bot.ask(
                     chat_id=query.from_user.id,
-                    text="Please upload the video file you want to process within 30 seconds.",
-                    filters=filters.media,
+                    text="Please upload your subtitles file in `.srt` format within 30 seconds.",
+                    filters=filters.document,
                     timeout=30,
                 )
 
-                if video_message.document.mime_type.startswith('video'):
-                # Download the video file and get its path
-                    input_video_path = await video_message.download()
+                if subtitle_message.document.file_name.endswith('.srt'):
+                # Download the subtitle file
+                    subtitle_file_path = await subtitle_message.download()
 
-                # Ask the user for the subtitle file
-                    subtitle_message = await bot.ask(
-                        chat_id=query.from_user.id,
-                        text="Please upload your subtitles file in `.srt` format within 30 seconds.",
-                        filters=filters.document,
-                        timeout=30,
+                # Get the existing video (the file that the user already sent)
+                    input_video_path = query.message.reply_to_message.video.file_name
+                    c_thumb = await db.get_thumbnail(query.from_user.id)
+
+                # FFmpeg command to add both watermark and subtitles
+                    ffmpeg = (
+                        f"-i {input_video_path} -vf \"subtitles={subtitle_file_path}:force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',"
+                    "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
+                    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:"
+                    "fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                    "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
+                    "-c:a libopus -b:a 32k -ac 2 "
+                    "-metadata:s:s:0 language=eng "
+                    "-c:s mov_text -map 0:v -map 0:a -map 1:s"
                     )
 
-                    if subtitle_message.document.file_name.endswith('.srt'):
-                    # Download the subtitle file
-                        subtitle_file_path = await subtitle_message.download()
-                        c_thumb = await db.get_thumbnail(query.from_user.id)
-
-                    # FFmpeg command to add both watermark and subtitles
-                        ffmpeg = (
-                            f"-i {input_video_path} -vf \"subtitles={subtitle_file_path}:force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',"
-                        "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
-                            "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:"
-                            "fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-                            "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
-                            "-c:a libopus -b:a 32k -ac 2 "
-                            "-metadata:s:s:0 language=eng "
-                            "-c:s mov_text -map 0:v -map 0:a -map 1:s"
-                        )
-
-                    # Call CompVideo function to process the video
-                        await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg_command, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
+                # Call CompVideo function to process the video
+                    await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
 
             except asyncio.TimeoutError:
                 await query.message.edit(
