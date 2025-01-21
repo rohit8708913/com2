@@ -310,7 +310,7 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
         )
 
         await ms.edit("🗜 **Compressing...**")
-        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2,subtitles='{subtitle_path}',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
+        cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2,subtitles='{subtitle_file_path}',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10" -preset ultrafast -threads 4 -bufsize 64M -movflags +faststart "{Output_Path}" -y"""
         print(f"Running FFmpeg command: {cmd}")  # Debugging
 
         # Run FFmpeg with real-time output logging
