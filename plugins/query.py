@@ -183,15 +183,15 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 
                 # FFmpeg command to add both watermark and subtitles
                     ffmpeg = (
-                        f"-i {input_video_path} -vf \"subtitles={subtitle_file_path}:force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',"
-                    "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
-                    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:"
-                    "fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-                    "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
-                    "-c:a libopus -b:a 32k -ac 2 "
-                    "-metadata:s:s:0 language=eng "
-                    "-c:s mov_text -map 0:v -map 0:a -map 1:s"
-                    )
+    f"-i {input_video_path} -vf \"subtitles='{subtitle_file_path}':force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',"
+    "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
+    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:"
+    "fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+    "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
+    "-c:a libopus -b:a 32k -ac 2 "
+    "-metadata:s:s:0 language=eng "
+    "-c:s mov_text -map 0:v -map 0:a -map 1:s"
+)
 
                 # Call CompVideo function to process the video
                     await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
