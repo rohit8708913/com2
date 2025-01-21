@@ -164,43 +164,61 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             )
 
             try:
-                # Ask the user for the subtitle file
-                subtitle_message = await bot.ask(
+            # Ask the user for the video file
+                video_message = await bot.ask(
                     chat_id=query.from_user.id,
-                    text="Please upload your subtitles file in `.srt` format within 30 seconds.",
-                    filters=filters.document,
+                    text="Please upload the video file you want to process within 30 seconds.",
+                    filters=filters.media,
                     timeout=30,
                 )
 
-                if subtitle_message.document.file_name.endswith('.srt'):
+                if video_message.document.mime_type.startswith('video'):
+                # Download the video file and get its path
+                    input_video_path = await video_message.download()
+
+                # Ask the user for the subtitle file
+                    subtitle_message = await bot.ask(
+                        chat_id=query.from_user.id,
+                        text="Please upload your subtitles file in `.srt` format within 30 seconds.",
+                        filters=filters.document,
+                        timeout=30,
+                    )
+
+                    if subtitle_message.document.file_name.endswith('.srt'):
                     # Download the subtitle file
-                    subtitle_file_path = await subtitle_message.download()
-                    c_thumb = await db.get_thumbnail(query.from_user.id)
+                        subtitle_file_path = await subtitle_message.download()
+                        c_thumb = await db.get_thumbnail(query.from_user.id)
 
                     # FFmpeg command to add both watermark and subtitles
-                    ffmpeg = (
-    f"-i {input_video_path} -vf \"subtitles={subtitle_file_path}:force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
-    "-c:a libopus -b:a 32k -ac 2 "
-    "-metadata:s:s:0 language=eng "
-    "-c:s mov_text -map 0:v -map 0:a -map 1:s"
-)
+                        ffmpeg = (
+                            f"-i {input_video_path} -vf \"subtitles={subtitle_file_path}:force_style='FontName=Arial,FontSize=24,PrimaryColour=&HFFFFFF&',"
+                        "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
+                            "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:"
+                            "fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                            "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
+                            "-c:a libopus -b:a 32k -ac 2 "
+                            "-metadata:s:s:0 language=eng "
+                            "-c:s mov_text -map 0:v -map 0:a -map 1:s"
+                        )
 
- # Process the video (compression is set to False because no compression is needed here)
-                    await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
-                    await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
-                else:
-                    await query.message.reply_text("Invalid file format. Please send a valid `.srt` file.")
-            except TimeoutError:
-                await query.message.reply_text("**Error:** You took too long to respond. Please try again.")
-            except Exception as e:
-                print(f"Error while processing subtitles: {e}")
-                await query.message.reply_text("An error occurred while processing your subtitles. Please try again.")
+                    # Call CompVideo function to process the video
+                        await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg_command, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
+
+            except asyncio.TimeoutError:
+                await query.message.edit(
+                    text="Sorry, you took too long to send the files. Please try again.",
+                    reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                    ])
+                )
+
         except Exception as e:
-            print(f"General error in 'add_subtitles': {e}")
-            await query.message.reply_text("An unexpected error occurred. Please try again later.")
-        finally:
-            await bot.send_message(chat_id=query.from_user.id, text="Subtitle handling process completed.")
+            await query.message.edit(
+                text=f"An error occurred: {str(e)}",
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton(text='⟸ Bᴀᴄᴋ', callback_data='option')]
+                ])
+            )
 
     elif data == "add_watermark":
         try:
