@@ -310,8 +310,7 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
         )
 
         await ms.edit("🗜 **Compressing...**")
-        cmd = f"""
-ffmpeg -i "{dl}" -i "{subtitle_file_path}" \
+        cmd = f"""ffmpeg -i "{dl}" -i "{subtitle_file_path}" \
 -vf "scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',subtitles='{subtitle_file_path.replace("'", "\\'")}',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10" \
 -c:v libx264 -crf 30 -preset ultrafast -pix_fmt yuv420p \
 -c:a libopus -b:a 32k -ac 2 \
