@@ -210,14 +210,6 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             # Call CompressVideo function but set compress=False to avoid compression
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
 
-            # Send the processed video with watermark to the user
-            await bot.send_video(
-                chat_id=query.from_user.id,
-                video="output.mp4",
-                caption="Here’s your video with the watermark added!",
-                thumb=c_thumb
-            )
-
         except Exception as e:
             # Print error for debugging
             print(f"Error during add_watermark: {e}")
