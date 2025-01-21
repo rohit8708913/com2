@@ -91,7 +91,8 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
     "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
     "-vf \"scale='if(gt(iw,ih),840,-1)':'if(gt(iw,ih),-1,480)',"
     "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
+    "-max_interleave_delta 0 -bufsize 8000k -thread_queue_size 1024 -movflags +faststart"
 )
 
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
@@ -108,7 +109,8 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
     "-vf \"scale='if(gt(iw,ih),1280,-1)':'if(gt(iw,ih),-1,720)',"
     "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10,"
     "scale='if(eq(mod(iw,2),1),iw-1,iw)':'if(eq(mod(ih,2),1),ih-1,ih)'\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
+    "-max_interleave_delta 0 -bufsize 8000k -thread_queue_size 1024 -movflags +faststart"
 )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
@@ -124,7 +126,8 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
     "-vf \"scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',"
     "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10,"
     "scale='if(eq(mod(iw,2),1),iw-1,iw)':'if(eq(mod(ih,2),1),ih-1,ih)'\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
+    "-max_interleave_delta 0 -bufsize 8000k -thread_queue_size 1024 -movflags +faststart"
 )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
@@ -139,7 +142,8 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
     "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
     "-vf \"scale='if(gt(iw,ih),floor(iw/2)*2,-1)':'if(gt(iw,ih),-1,floor(ih/2)*2)',"
     "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5 "
+    "-max_interleave_delta 0 -bufsize 8000k -thread_queue_size 1024 -movflags +faststart"
 )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
