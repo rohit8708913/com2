@@ -170,15 +170,14 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
 
                     # FFmpeg command to add both watermark and subtitles
                     ffmpeg = (
-    f"-i input.mp4 "
     f"-vf \"subtitles={subtitle_file_path},scale='if(gt(iw,ih),1920,-1)':'if(gt(iw,ih),-1,1080)',drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
     "-c:v libx264 -crf 30 -preset veryfast -pix_fmt yuv420p "
     "-c:a libopus -b:a 32k -ac 2 "
     "-metadata:s:s:0 language=eng "
-    "-c:s mov_text -map 0:v -map 0:a -map 0:s "
-    "output.mp4"
-)
-                    # Process the video (compression is set to False because no compression is needed here)
+    "-c:s mov_text -map 0:v -map 0:a -map 0:s"
+)    
+
+ # Process the video (compression is set to False because no compression is needed here)
                     await bot.send_message(chat_id=query.from_user.id, text="Processing your video, please wait...")
                     await CompVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb, subtitle_file_path=subtitle_file_path)
                 else:
