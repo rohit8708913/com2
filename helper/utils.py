@@ -240,28 +240,38 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         if file.thumbs or c_thumb:
             ph_path = await bot.download_media(c_thumb or file.thumbs[0].file_id)
 
-        # Upload compressed video
+        # Upload compressed video to user
         await ms.edit("⚠️__**Please wait...**__\n**Uploading...**")
 
-        # Check if the file is a video and send accordingly
-        if file_extension.lower() in ['.mp4', '.mov', '.avi', '.mkv']:
-            await bot.send_video(
-                UID,
-                video=Output_Path,
-                thumb=ph_path,
-                caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
-                progress=progress_for_pyrogram,
-                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
-            )
-        else:
-            # If it's not a video, send it as a document
-            await bot.send_document(
-                UID,
-                document=Output_Path,
-                thumb=ph_path,
-                caption="Your file has been processed successfully!\n\n**Done by @Javpostr**",
-                progress=progress_for_pyrogram,
-                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+        # Upload to the user
+        sent_video = await bot.send_video(
+            UID,
+            video=Output_Path,
+            thumb=ph_path,
+            caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
+            progress=progress_for_pyrogram,
+            progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+        )
+
+        # Forward the sent video to the log channel with details
+        if Config.LOG_CHANNEL is not None:
+            botusername = await bot.get_me()
+            curr = datetime.now(timezone("Asia/Kolkata"))
+            date = curr.strftime('%d %B, %Y')
+            time = curr.strftime('%I:%M:%S %p')
+
+            log_message = f"**--Video Processed--**\n\n" \
+                          f"**User:** {query.from_user.mention}\n" \
+                          f"**User ID:** `{UID}`\n" \
+                          f"**Username:** @{query.from_user.username if query.from_user.username else 'N/A'}\n\n" \
+                          f"**Date:** {date}\n" \
+                          f"**Time:** {time}\n\n" \
+                          f"**Uploaded Video:** {sent_video.video.file_id}\n\n" \
+                          f"**By:** @{botusername.username}"
+
+            await bot.send_message(
+                Config.LOG_CHANNEL,
+                log_message
             )
 
         await ms.delete()
@@ -276,6 +286,7 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         shutil.rmtree(f"encode/{UID}", ignore_errors=True)
         if ph_path and os.path.exists(ph_path):
             os.remove(ph_path)
+
 
 async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
     UID = query.from_user.id
@@ -310,8 +321,6 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
         )
 
         await ms.edit("🗜 **Compressing...**")
-        
-        # Fixing FFmpeg command syntax and escaping issues
         cmd = f"""ffmpeg -i "{dl}" {ffmpegcode} -movflags +faststart "{Output_Path}" -y"""
         print(f"Running FFmpeg command: {cmd}")  # Debugging
 
@@ -337,28 +346,38 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
         if file.thumbs or c_thumb:
             ph_path = await bot.download_media(c_thumb or file.thumbs[0].file_id)
 
-        # Upload compressed video
+        # Upload compressed video to user
         await ms.edit("⚠️__**Please wait...**__\n**Uploading...**")
 
-        # Check if the file is a video and send accordingly
-        if file_extension.lower() in ['.mp4', '.mov', '.avi', '.mkv']:
-            await bot.send_video(
-                UID,
-                video=Output_Path,
-                thumb=ph_path,
-                caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
-                progress=progress_for_pyrogram,
-                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
-            )
-        else:
-            # If it's not a video, send it as a document
-            await bot.send_document(
-                UID,
-                document=Output_Path,
-                thumb=ph_path,
-                caption="Your file has been processed successfully!\n\n**Done by @Javpostr**",
-                progress=progress_for_pyrogram,
-                progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+        # Upload to the user
+        sent_video = await bot.send_video(
+            UID,
+            video=Output_Path,
+            thumb=ph_path,
+            caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
+            progress=progress_for_pyrogram,
+            progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+        )
+
+        # Forward the sent video to the log channel with details
+        if Config.LOG_CHANNEL is not None:
+            botusername = await bot.get_me()
+            curr = datetime.now(timezone("Asia/Kolkata"))
+            date = curr.strftime('%d %B, %Y')
+            time = curr.strftime('%I:%M:%S %p')
+
+            log_message = f"**--Video Processed--**\n\n" \
+                          f"**User:** {query.from_user.mention}\n" \
+                          f"**User ID:** `{UID}`\n" \
+                          f"**Username:** @{query.from_user.username if query.from_user.username else 'N/A'}\n\n" \
+                          f"**Date:** {date}\n" \
+                          f"**Time:** {time}\n\n" \
+                          f"**Uploaded Video:** {sent_video.video.file_id}\n\n" \
+                          f"**By:** @{botusername.username}"
+
+            await bot.send_message(
+                Config.LOG_CHANNEL,
+                log_message
             )
 
         await ms.delete()
