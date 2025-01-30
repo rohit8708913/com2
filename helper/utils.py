@@ -186,6 +186,7 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
     ph_path = None
+    time = curr.strftime('%I:%M:%S %p')
 
     try:
         # Check for existing processes
