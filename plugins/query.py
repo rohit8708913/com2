@@ -10,7 +10,6 @@ from helper.utils import Compress_Stats, skip, CompressVideo, CompVideo
 from helper.database import db
 from script import Txt
 
-
 @Client.on_callback_query()
 async def Cb_Handle(bot: Client, query: CallbackQuery):
     data = query.data
@@ -82,19 +81,18 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
             ]
             await query.message.edit(text='**Select the Compression Method Below 👇 **', reply_markup=InlineKeyboardMarkup(BTNS))
 
-    
     elif data == '480pc':
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
-    "-preset veryfast -c:v libx264 "
-    "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw/ih,854/480),floor(iw/2)*2,-1)':'if(gt(iw/ih,854/480),-1,floor(ih/2)*2)',"
-    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
-
+                "-preset veryfast -c:v libx264 "
+                "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-max_muxing_queue_size 1024 -bufsize 5000k "
+                "-vf \"scale='if(gt(iw/ih,854/480),floor(iw/2)*2,-1)':'if(gt(iw/ih,854/480),-1,floor(ih/2)*2)',"
+                "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=24:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
@@ -103,13 +101,14 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
-    "-preset veryfast -c:v libx264 "
-    "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw/ih,1280/720),floor(iw/2)*2,-1)':'if(gt(iw/ih,1280/720),-1,floor(ih/2)*2)',"
-    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=36:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
+                "-preset veryfast -c:v libx264 "
+                "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-max_muxing_queue_size 1024 -bufsize 5000k "
+                "-vf \"scale='if(gt(iw/ih,1280/720),floor(iw/2)*2,-1)':'if(gt(iw/ih,1280/720),-1,floor(ih/2)*2)',"
+                "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=36:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
@@ -118,13 +117,14 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
-    "-preset veryfast -c:v libx264 "
-    "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw/ih,1920/1080),floor(iw/2)*2,-1)':'if(gt(iw/ih,1920/1080),-1,floor(ih/2)*2)\","
-    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
+                "-preset veryfast -c:v libx264 "
+                "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-max_muxing_queue_size 1024 -bufsize 5000k "
+                "-vf \"scale='if(gt(iw/ih,1920/1080),floor(iw/2)*2,-1)':'if(gt(iw/ih,1920/1080),-1,floor(ih/2)*2)',"
+                "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
@@ -133,13 +133,14 @@ async def Cb_Handle(bot: Client, query: CallbackQuery):
         try:
             c_thumb = await db.get_thumbnail(query.from_user.id)
             ffmpeg = (
-    "-preset veryfast -c:v libx264 "
-    "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
-    "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
-    "-vf \"scale='if(gt(iw/ih,16/9),3840,-2)':'if(gt(iw/ih,16/9),-2,2160)',"
-    "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
-    "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
-)
+                "-preset veryfast -c:v libx264 "
+                "-x265-params \"bframes=8:psy-rd=1:ref=3:aq-mode=3:aq-strength=0.8:deblock=1,1\" "
+                "-pix_fmt yuv420p -crf 30 -c:a libopus -b:a 32k "
+                "-max_muxing_queue_size 1024 -bufsize 5000k "
+                "-vf \"scale='if(gt(iw/ih,3840/2160),floor(iw/2)*2,-1)':'if(gt(iw/ih,3840/2160),-1,floor(ih/2)*2)',"
+                "drawtext=text='by @Javpostr':fontcolor=white@0.8:fontsize=48:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:x=10:y=h-th-10\" "
+                "-map 0:v -map 0:a -ac 2 -ab 32k -vbr 2 -level 3.1 -threads 5"
+            )
             await CompressVideo(bot=bot, query=query, ffmpegcode=ffmpeg, c_thumb=c_thumb)
         except Exception as e:
             print(e)
