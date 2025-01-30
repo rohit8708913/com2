@@ -110,7 +110,7 @@ async def send_log(b, u):
             Config.LOG_CHANNEL,
             f"**--Nᴇᴡ Uꜱᴇʀ Sᴛᴀʀᴛᴇᴅ Tʜᴇ Bᴏᴛ--**\n\nUꜱᴇʀ: {u.mention}\nIᴅ: `{u.id}`\nUɴ: @{u.username}\n\nDᴀᴛᴇ: {date}\nTɪᴍᴇ: {time}\n\nBy: @{botusername.username}"
         )
-        
+
 
 def Filename(filename, mime_type):
     if filename.split('.')[-1] in ['mkv', 'mp4', 'mp3', 'mov']:
@@ -120,13 +120,13 @@ def Filename(filename, mime_type):
     else:
         if mime_type.split('/')[1] in ['pdf', 'mkv', 'mp4', 'mp3']:
             return f"{filename}.{mime_type.split('/')[1]}"
-        
+
         elif mime_type.split('/')[0] == "audio":
             return f"{filename}.mp3"
 
         else:
             return f"{filename}.mkv"
-            
+
 async def CANT_CONFIG_GROUP_MSG(client, message):
     botusername = await client.get_me()
     btn = [
@@ -143,7 +143,7 @@ async def Compress_Stats(e, userid):
 
     if int(userid) not in [e.from_user.id, 0]:
         return await e.answer(f"⚠️ Hᴇʏ {e.from_user.first_name}\nYᴏᴜ ᴄᴀɴ'ᴛ sᴇᴇ sᴛᴀᴛᴜs ᴀs ᴛʜɪs ɪs ɴᴏᴛ ʏᴏᴜʀ ғɪʟᴇ", show_alert=True)
-    
+
     inp = f"ffmpeg/{e.from_user.id}/{os.listdir(f'ffmpeg/{e.from_user.id}')[0]}"
     outp = f"encode/{e.from_user.id}/{os.listdir(f'encode/{e.from_user.id}')[0]}"
     try:
@@ -179,22 +179,21 @@ async def skip(e, userid):
         shutil.rmtree(f'encode' + '/' + str(userid))
     except Exception as e:
         pass
-    
+
     return
 
 async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
+    LOG_CHANNEL = Config.LOG_CHANNEL  # Log channel ID from your 
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
     ph_path = None
-    botusername = await bot.get_me()
-    curr = datetime.now(timezone("Asia/Kolkata"))
-    date = curr.strftime('%d %B, %Y')
-    time = curr.strftime('%I:%M:%S %p')
 
     try:
         # Check for existing processes
         if os.path.isdir(f'ffmpeg/{UID}') and os.path.isdir(f'encode/{UID}'):
-            return await ms.edit("**⚠️ Yᴏᴜ ᴄᴀɴ ᴄᴏᴍᴘʀᴇss ᴏɴʟʏ ᴏɴᴇ ғɪʟᴇ ᴀᴛ ᴀ ᴛɪᴍᴇ\n\nAs ᴛʜɪs ʜᴇʟᴘs ʀᴇᴅᴜᴄᴇ sᴇʀᴠᴇʀ ʟᴏᴀᴅ.**")
+            return await ms.edit(
+                "**⚠️ Yᴏᴜ ᴄᴀɴ ᴄᴏᴍᴘʀᴇss ᴏɴʟʏ ᴏɴᴇ ғɪʟᴇ ᴀᴛ ᴀ ᴛɪᴍᴇ\n\nAs ᴛʜɪs ʜᴇʟᴘs ʀᴇᴅᴜᴄᴇ sᴇʀᴠᴇʀ ʟᴏᴀᴅ.**"
+            )
 
         # Fetch video details
         media = query.message.reply_to_message
@@ -215,7 +214,11 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
             message=file,
             file_name=File_Path,
             progress=progress_for_pyrogram,
-            progress_args=("\n⚠️__**Please wait...**__\n\n☃️ **Dᴏᴡɴʟᴏᴀᴅ Sᴛᴀʀᴛᴇᴅ....**", ms, time.time())
+            progress_args=(
+                "\n⚠️__**Please wait...**__\n\n☃️ **Dᴏᴡɴʟᴏᴀᴅ Sᴛᴀʀᴛᴇᴅ....**",
+                ms,
+                time.time()
+            )
         )
 
         await ms.edit("🗜 **Compressing...**")
@@ -244,38 +247,35 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
         if file.thumbs or c_thumb:
             ph_path = await bot.download_media(c_thumb or file.thumbs[0].file_id)
 
-        # Upload compressed video to user
-        await ms.edit("⚠️__**Please wait...**__\n**Uploading...**")
-
-        # Upload to the user
-        sent_video = await bot.send_video(
+        # Send compressed video to the user
+        await ms.edit("⚠️ __Uploading your video...__")
+        sent_message = await bot.send_video(
             UID,
             video=Output_Path,
-            thumb=ph_path,
+            thumb=c_thumb or None,
             caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
+            supports_streaming=True,  # Ensure duration is displayed
             progress=progress_for_pyrogram,
-            progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+            progress_args=(
+                "Uploading...",
+                ms,
+                time.time()
+            )
         )
 
-        # Forward the sent video to the log channel with details
-        if Config.LOG_CHANNEL is not None:
-            botusername = await bot.get_me()
-            curr = datetime.now(timezone("Asia/Kolkata"))
-            date = curr.strftime('%d %B, %Y')
-            time = curr.strftime('%I:%M:%S %p')
-
-            log_message = f"**--Video Processed--**\n\n" \
-                          f"**User:** {query.from_user.mention}\n" \
-                          f"**User ID:** `{UID}`\n" \
-                          f"**Username:** @{query.from_user.username if query.from_user.username else 'N/A'}\n\n" \
-                          f"**Date:** {date}\n" \
-                          f"**Time:** {time}\n\n" \
-                          f"**Uploaded Video:** {sent_video.video.file_id}\n\n" \
-                          f"**By:** @{botusername.username}"
-
-            await bot.send_message(
-                Config.LOG_CHANNEL,
-                log_message
+        # Log the compressed video to the log channel
+        if LOG_CHANNEL:
+            await bot.send_video(
+                LOG_CHANNEL,
+                video=Output_Path,
+                caption=(
+                    f"**Compressed Video**\n\n"
+                    f"👤 User: {query.from_user.mention}\n"
+                    f"🆔 User ID: `{UID}`\n"
+                    f"📂 Filename: `{filename}`"
+                ),
+                thumb=c_thumb or None,
+                supports_streaming=True
             )
 
         await ms.delete()
@@ -294,17 +294,16 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
 
 async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
     UID = query.from_user.id
+    LOG_CHANNEL = Config.LOG_CHANNEL  # Log channel ID from your 
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
     ph_path = None
-    botusername = await bot.get_me()
-    curr = datetime.now(timezone("Asia/Kolkata"))
-    date = curr.strftime('%d %B, %Y')
-    time = curr.strftime('%I:%M:%S %p')
 
     try:
         # Check for existing processes
         if os.path.isdir(f'ffmpeg/{UID}') and os.path.isdir(f'encode/{UID}'):
-            return await ms.edit("**⚠️ Yᴏᴜ ᴄᴀɴ ᴄᴏᴍᴘʀᴇss ᴏɴʟʏ ᴏɴᴇ ғɪʟᴇ ᴀᴛ ᴀ ᴛɪᴍᴇ\n\nAs ᴛʜɪs ʜᴇʟᴘs ʀᴇᴅᴜᴄᴇ sᴇʀᴠᴇʀ ʟᴏᴀᴅ.**")
+            return await ms.edit(
+                "**⚠️ Yᴏᴜ ᴄᴀɴ ᴄᴏᴍᴘʀᴇss ᴏɴʟʏ ᴏɴᴇ ғɪʟᴇ ᴀᴛ ᴀ ᴛɪᴍᴇ\n\nAs ᴛʜɪs ʜᴇʟᴘs ʀᴇᴅᴜᴄᴇ sᴇʀᴠᴇʀ ʟᴏᴀᴅ.**"
+            )
 
         # Fetch video details
         media = query.message.reply_to_message
@@ -325,7 +324,11 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
             message=file,
             file_name=File_Path,
             progress=progress_for_pyrogram,
-            progress_args=("\n⚠️__**Please wait...**__\n\n☃️ **Dᴏᴡɴʟᴏᴀᴅ Sᴛᴀʀᴛᴇᴅ....**", ms, time.time())
+            progress_args=(
+                "\n⚠️__**Please wait...**__\n\n☃️ **Dᴏᴡɴʟᴏᴀᴅ Sᴛᴀʀᴛᴇᴅ....**",
+                ms,
+                time.time()
+            )
         )
 
         await ms.edit("🗜 **Compressing...**")
@@ -354,38 +357,35 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
         if file.thumbs or c_thumb:
             ph_path = await bot.download_media(c_thumb or file.thumbs[0].file_id)
 
-        # Upload compressed video to user
-        await ms.edit("⚠️__**Please wait...**__\n**Uploading...**")
-
-        # Upload to the user
-        sent_video = await bot.send_video(
+        # Send compressed video to the user
+        await ms.edit("⚠️ __Uploading your video...__")
+        sent_message = await bot.send_video(
             UID,
             video=Output_Path,
-            thumb=ph_path,
+            thumb=c_thumb or None,
             caption="Your video is compressed successfully!\n\n**Done by @Javpostr**",
+            supports_streaming=True,  # Ensure duration is displayed
             progress=progress_for_pyrogram,
-            progress_args=("⚠️__**Please wait...**__\n🌨️ **Upload Started....**", ms, time.time())
+            progress_args=(
+                "Uploading...",
+                ms,
+                time.time()
+            )
         )
 
-        # Forward the sent video to the log channel with details
-        if Config.LOG_CHANNEL is not None:
-            botusername = await bot.get_me()
-            curr = datetime.now(timezone("Asia/Kolkata"))
-            date = curr.strftime('%d %B, %Y')
-            time = curr.strftime('%I:%M:%S %p')
-
-            log_message = f"**--Video Processed--**\n\n" \
-                          f"**User:** {query.from_user.mention}\n" \
-                          f"**User ID:** `{UID}`\n" \
-                          f"**Username:** @{query.from_user.username if query.from_user.username else 'N/A'}\n\n" \
-                          f"**Date:** {date}\n" \
-                          f"**Time:** {time}\n\n" \
-                          f"**Uploaded Video:** {sent_video.video.file_id}\n\n" \
-                          f"**By:** @{botusername.username}"
-
-            await bot.send_message(
-                Config.LOG_CHANNEL,
-                log_message
+        # Log the compressed video to the log channel
+        if LOG_CHANNEL:
+            await bot.send_video(
+                LOG_CHANNEL,
+                video=Output_Path,
+                caption=(
+                    f"**Compressed Video**\n\n"
+                    f"👤 User: {query.from_user.mention}\n"
+                    f"🆔 User ID: `{UID}`\n"
+                    f"📂 Filename: `{filename}`"
+                ),
+                thumb=c_thumb or None,
+                supports_streaming=True
             )
 
         await ms.delete()
