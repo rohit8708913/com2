@@ -186,6 +186,9 @@ async def CompressVideo(bot, query, ffmpegcode, c_thumb):
     UID = query.from_user.id
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
     ph_path = None
+    botusername = await bot.get_me()
+    curr = datetime.now(timezone("Asia/Kolkata"))
+    date = curr.strftime('%d %B, %Y')
     time = curr.strftime('%I:%M:%S %p')
 
     try:
@@ -293,6 +296,10 @@ async def CompVideo(bot, query, ffmpegcode, c_thumb, subtitle_file_path):
     UID = query.from_user.id
     ms = await query.message.edit('Pʟᴇᴀsᴇ Wᴀɪᴛ...\n\n**Fᴇᴛᴄʜɪɴɢ Qᴜᴇᴜᴇ 👥**')
     ph_path = None
+    botusername = await bot.get_me()
+    curr = datetime.now(timezone("Asia/Kolkata"))
+    date = curr.strftime('%d %B, %Y')
+    time = curr.strftime('%I:%M:%S %p')
 
     try:
         # Check for existing processes
