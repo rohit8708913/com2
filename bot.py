@@ -11,6 +11,9 @@ from pytz import timezone
 from aiohttp import web
 from plugins.web_support import web_server
 import pyromod
+import pyrogram.utils
+
+pyrogram.utils.MIN_CHANNEL_ID = -1009147483647
 
 logging.config.fileConfig('logging.conf')
 logging.getLogger().setLevel(logging.INFO)
