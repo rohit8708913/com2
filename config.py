@@ -7,8 +7,8 @@ class Config(object):
     # pyro client config
     API_ID    = os.environ.get("API_ID", "22469064")  # ⚠️ Required
     API_HASH  = os.environ.get("API_HASH", "c05481978a217fdb11fa6774b15cba32") # ⚠️ Required
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7401282886:AAF9p1Dmxs807IJZzSq84m5LObco0pZR63c") # ⚠️ Required
-    FORCE_SUB = os.environ.get('FORCE_SUB', '-1002266025682') # ⚠️ Required
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7520786912:AAHVWUMSGYh1_45k6dJemeL1C_sSZlmAIqg") # ⚠️ Required
+    FORCE_SUB = os.environ.get('FORCE_SUB', '-1002370816678') # ⚠️ Required
     AUTH_CHANNEL = int(FORCE_SUB) if FORCE_SUB and id_pattern.search(
     FORCE_SUB) else None
    
@@ -18,7 +18,7 @@ class Config(object):
 
     # Other Configs 
     ADMIN = int(os.environ.get("ADMIN", "7328629001")) # ⚠️ Required
-    LOG_CHANNEL = int(os.environ.get('LOG_CHANNEL', '-1002170811388')) # ⚠️ Required
+    LOG_CHANNEL = int(os.environ.get('LOG_CHANNEL', '-1002370816678')) # ⚠️ Required
     BOT_UPTIME = BOT_UPTIME  = time.time()
     START_PIC = os.environ.get("START_PIC", "https://graph.org/file/15e82d7e665eccc8bd9c5.jpg")
 
